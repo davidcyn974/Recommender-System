@@ -10,6 +10,10 @@ L'objectif est de suggérer des films qui pourraient plaire aux deux membres du 
 ### 1. Collecte et Prétraitement des Données
 
 - Utilisation des datasets MovieLens et IMDb.
+<ins>Attention</ins> les datasets name_basics & title_basics d'IMDB n'ont pas été push sur GitHub car trop volumineux.\
+Si vous voulez tester mon code, il faudra les télécharger sur le site d'IMDB: 
+      - [name_basics](https://datasets.imdbws.com/name.basics.tsv.gz)
+      - [title_basics](https://datasets.imdbws.com/title.basics.tsv.gz)
 - Fusion des datasets pour inclure les notes, genres et métadonnées des films.
 - Nettoyage des données :
     - Suppression des caractères spéciaux
@@ -30,17 +34,16 @@ L'objectif est de suggérer des films qui pourraient plaire aux deux membres du 
 
 ### 3. Développement du Modèle
 
-- Implémentation de l'algorithme FunkSVD (Singular Value Decomposition).
+- Implémentation de l'algorithme ALS (Alternating Least Squares)
 - Choix des hyperparamètres :
-  - Nombre de facteurs latents : 20
-  - Nombre d'époques : 50
-  - Taux d'apprentissage : 0.005
-  - Régularisation : 0.02
+  - Nombre de facteurs latents : 50
+  - Nombre d'itérations : 50
+  - Régularisation : 0.01
 
 ### 4. Algorithme de Recommandation
 
 - Calcul d'un vecteur combiné pour le couple en faisant la moyenne des vecteurs individuels.
-- Sélection des 5 meilleurs films avec les meilleures prédictions de notes.
+- Sélection des n=5, ou n=10 (dans les faits on peut faire varier n), meilleurs films avec les meilleures prédictions de notes.
 
 ## Expériences
 
@@ -48,12 +51,21 @@ L'objectif est de suggérer des films qui pourraient plaire aux deux membres du 
    - Division des données en ensembles d'entraînement (80%) et de test (20%).
 
 2. **Entraînement du Modèle** :
-   - Entraînement du modèle FunkSVD sur l'ensemble d'entraînement.
+   - Entraînement du modèle Alternating Least Squares (ALS) sur l'ensemble d'entraînement.
 
 3. **Génération de Recommandations** :
    - Test du système avec différents couples d'utilisateurs.
+   - D'abord les users 1 et 2, puis les users qui ont le plus noté de films et enfin de manière aléatoire pour 10 couples.
 
 ## Résultats
 
-- Le modèle FunkSVD a convergé avec une MSE (Mean Squared Error) finale de [insérer la valeur finale de MSE].
+- Le modèle ALS a convergé avec une MSE (Mean Squared Error) finale d'environ 0.14.
 - Exemple de recommandations pour le couple (utilisateur 1, utilisateur 2) :
+```python
+user1_id = 1
+user2_id = 2
+
+recommendations = recommend_movies_als(user1_id, user2_id, als_model, user_mapping, item_mapping, distinct_movies, num_recommendations=10)
+
+print(recommendations)
+```
